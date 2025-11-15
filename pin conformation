@@ -1,0 +1,69 @@
+#include <Arduino.h>
+
+// Joystick analog pins
+#define RIGHT_VRX_JOYSTICK 39
+#define RIGHT_VRY_JOYSTICK 36
+#define LEFT_VRX_JOYSTICK 34
+#define LEFT_VRY_JOYSTICK 35
+
+// Button pins
+#define X_BUTTON 25
+#define CIRCLE_BUTTON 26
+#define TRIANGLE_BUTTON 27
+#define SQUARE_BUTTON 14
+#define R1_BUTTON 12
+#define R2_BUTTON 13
+#define L1_BUTTON 5
+#define L2_BUTTON 4
+// Removed START_BUTTON (2)
+#define SELECT_BUTTON 15
+#define PS_BUTTON 18
+#define R3_BUTTON 19
+#define L3_BUTTON 21
+
+#define NUM_BUTTONS 12  // One less since start removed
+
+const int buttonPins[NUM_BUTTONS] = {
+  X_BUTTON, CIRCLE_BUTTON, TRIANGLE_BUTTON, SQUARE_BUTTON,
+  R1_BUTTON, R2_BUTTON, L1_BUTTON, L2_BUTTON,
+  SELECT_BUTTON, PS_BUTTON, R3_BUTTON, L3_BUTTON
+};
+
+const char* buttonNames[NUM_BUTTONS] = {
+  "X", "Circle", "Triangle", "Square",
+  "R1", "R2", "L1", "L2",
+  "Select", "PS", "R3", "L3"
+};
+
+void setup() {
+  Serial.begin(115200);
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    pinMode(buttonPins[i], INPUT_PULLUP);
+  }
+  Serial.println("Joystick and buttons test started (START button removed)...");
+}
+
+void loop() {
+  // Read and print button states
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    int buttonState = digitalRead(buttonPins[i]);
+    Serial.print(buttonNames[i]);
+    Serial.print(": ");
+    Serial.print(buttonState == LOW ? "Pressed" : "Released");
+    Serial.print("  ");
+  }
+  Serial.println();
+
+  // Read and print analog joystick values
+  int leftVrx = analogRead(LEFT_VRX_JOYSTICK);
+  int leftVry = analogRead(LEFT_VRY_JOYSTICK);
+  int rightVrx = analogRead(RIGHT_VRX_JOYSTICK);
+  int rightVry = analogRead(RIGHT_VRY_JOYSTICK);
+
+  Serial.print("Left Joystick VRX: "); Serial.print(leftVrx);
+  Serial.print(" VRY: "); Serial.print(leftVry);
+  Serial.print(" | Right Joystick VRX: "); Serial.print(rightVrx);
+  Serial.print(" VRY: "); Serial.println(rightVry);
+
+  delay(300); // Adjust delay for readability
+}
